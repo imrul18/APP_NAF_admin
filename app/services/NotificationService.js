@@ -1,10 +1,10 @@
-import http from "./http-common";
+import http from './http-common';
 
-const getAll = async () => {
-  const res = await http.get("/notification");
+const getAll = async currentPage => {
+  const res = await http.get('/notification', {params: {page: currentPage}});
   return res.data;
 };
-const readAt = async (id) => {
+const readAt = async id => {
   const res = await http.get(`/notification/read/${id}`);
   return res?.data;
 };

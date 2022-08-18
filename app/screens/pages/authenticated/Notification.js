@@ -21,17 +21,15 @@ const Notification = ({navigation}) => {
   const isFocused = useIsFocused();
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
-  const [currentPage, setCurrentPage] = useState(1);
+  const [currentPage, setCurrentPage] = useState(0);
   const [lastPage, setLastPage] = useState();
 
   const [data, setData] = useState([]);
 
   const getNotification = async () => {
-    console.log(currentPage, ':', lastPage);
-
     setLoading(true);
-    const res = await NotificationService.getAll({page: currentPage});
-    setCurrentPage(res.current_page + 1);
+    const res = await NotificationService.getAll(currentPage+1);
+    setCurrentPage(res.current_page);
     setLastPage(res.last_page);
     let y = data.concat(res.data);
     setData(y);
@@ -39,13 +37,13 @@ const Notification = ({navigation}) => {
   };
 
   useEffect(() => {
-    getNotification();
-  }, [isFocused]);
+    if(data.length<1) getNotification();
+  }, []);
 
   const onRefresh = async () => {
     setRefreshing(true);
-    const res = await NotificationService.getAll({page: 1});
-    setCurrentPage(res.current_page + 1);
+    const res = await NotificationService.getAll(1);
+    setCurrentPage(res.current_page);
     setLastPage(res.last_page);
     setData(res.data);
     setLoading(false);
@@ -128,7 +126,7 @@ const Notification = ({navigation}) => {
           }
           onEndReachedThreshold={0.5}
           onEndReached={() => {
-            if (currentPage > lastPage) return;
+            if (currentPage >= lastPage) return;
             else getNotification();
           }}
         />
