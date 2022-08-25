@@ -8,6 +8,7 @@ import {
   ImageBackground,
   ScrollView,
 } from 'react-native';
+import { useSelector } from 'react-redux';
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
@@ -15,6 +16,8 @@ import logo from '../../../../assets/media/logos/naf.png';
 import backgroundimage from './../../../../assets/media/illustrations/sketchy-1/13.png';
 
 const Dahsboard = () => {
+  const {user} = useSelector(state => state.authStore)
+  console.log(user?.permissions);
   return (
     <>
       <View style={styles.container}>

@@ -12,7 +12,7 @@ import {
   RefreshControl,
 } from 'react-native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import { useSelector } from 'react-redux';
+import {useSelector} from 'react-redux';
 
 import RequisitionService from '../../../../../services/RequisitionService';
 
@@ -72,7 +72,9 @@ const AllRequisition = ({navigation}) => {
       <TouchableOpacity
         style={styles.card}
         onPress={() => {
-          navigation.navigate('RequisitionDetails', {id: item.id});
+          (user?.role === 'Admin' ||
+            user?.permissions.includes('requisitions_show')) &&
+            navigation.navigate('RequisitionDetails', {id: item.id});
         }}>
         <View style={styles.cardtitle}>
           <Text>Requisition ID</Text>

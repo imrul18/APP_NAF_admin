@@ -80,21 +80,25 @@ const RequisitionDetails = ({navigation, route}) => {
               item?.part?.stocks[item?.part?.stocks.length - 1]?.unit_value > 0,
           ) ? (
             <>
-              {(user?.role == 'Admin' ||
-                user?.permissions.includes(
-                  'requisitions_generate_quotation',
-                )) && (
-                <>
-                  {data.status == 'approved' && (
+              <>
+                {data.status == 'approved' &&
+                  (user?.role == 'Admin' ||
+                    user?.permissions.includes(
+                      'requisitions_generate_quotation',
+                    )) && (
                     <TouchableOpacity>
                       <Text style={styles.button}>Generate Quotation</Text>
                     </TouchableOpacity>
                   )}
-                  {data.status == 'rejected' && (
-                    <Text style={{...styles.button, backgroundColor: 'tomato'}}>
-                      Rejected Quotation
-                    </Text>
-                  )}
+                {data.status == 'rejected' && (
+                  <Text style={{...styles.button, backgroundColor: 'tomato'}}>
+                    Rejected Quotation
+                  </Text>
+                )}
+              </>
+
+              {user?.permissions.includes('requisitions_approve') && (
+                <>
                   {data.status != 'rejected' && data.status != 'approved' && (
                     <View style={{flexDirection: 'row'}}>
                       <TouchableOpacity

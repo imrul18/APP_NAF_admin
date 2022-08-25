@@ -145,18 +145,25 @@ const Menu = ({navigation}) => {
         />
       )}
 
-      <Drawer.Screen
-        name="Sales"
-        component={Sales}
-        options={{
-          drawerIcon: ({focused, size}) => {
-            let color = focused ? 'red' : 'black';
-            return (
-              <MaterialIcons name="point-of-sale" size={size} color={color} />
-            );
-          },
-        }}
-      />
+      {(user?.role === 'Admin' ||
+        user?.permissions?.includes('requisitions_access') ||
+        user?.permissions?.includes('quotations_access') ||
+        user?.permissions?.includes('invoices_access') ||
+        user?.permissions?.includes('deliverynotes_access')) && (
+        <Drawer.Screen
+          name="Sales"
+          component={Sales}
+          options={{
+            drawerIcon: ({focused, size}) => {
+              let color = focused ? 'red' : 'black';
+              return (
+                <MaterialIcons name="point-of-sale" size={size} color={color} />
+              );
+            },
+          }}
+        />
+      )}
+
       <Drawer.Screen
         name="Profile"
         component={Profile}

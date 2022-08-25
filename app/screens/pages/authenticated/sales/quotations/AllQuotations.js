@@ -11,10 +11,12 @@ import {
   TouchableOpacity,
   RefreshControl,
 } from 'react-native';
+import { useSelector } from 'react-redux';
 import QuotationService from '../../../../../services/QuotationService';
 
 const AllQuotations = ({navigation}) => {
   const isFocused = useIsFocused();
+  const {user} = useSelector(state => state.authStore);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
@@ -67,6 +69,8 @@ const AllQuotations = ({navigation}) => {
       <TouchableOpacity
         style={styles.card}
         onPress={() => {
+          (user?.role === 'Admin' ||
+            user?.permissions.includes('quotations_show')) &&
           navigation.navigate('QuotationDetails', {id: item.id});
         }}>
         <View style={styles.cardtitle}>
