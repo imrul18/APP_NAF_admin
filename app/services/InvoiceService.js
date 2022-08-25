@@ -30,7 +30,6 @@ const remove = async (id) => {
 
 const addPayment = async (data)=>{
   const res = await http.post(`/payment-histories`, data)
-  console.log(data);
   return res.data;
 }
 

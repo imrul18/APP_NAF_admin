@@ -113,14 +113,26 @@ const QuotationDetails = ({navigation, route}) => {
           </Text>
           <Text>{data?.requisition?.priority}</Text>
           {data?.locked_at ? (
-            <TouchableOpacity
-              onPress={generateInvoice}
-              style={{
-                ...styles.btn,
-                paddingHorizontal: 15,
-              }}>
-              <Text style={styles.btntxt}>Generate Invoice</Text>
-            </TouchableOpacity>
+            data?.invoice ? (
+              <View
+                style={{
+                  ...styles.btn,
+                  paddingHorizontal: 15,
+                  backgroundColor: 'tomato',
+                  borderColor: 'tomato',
+                }}>
+                <Text style={styles.btntxt}>Invoice Generated</Text>
+              </View>
+            ) : (
+              <TouchableOpacity
+                onPress={generateInvoice}
+                style={{
+                  ...styles.btn,
+                  paddingHorizontal: 15,
+                }}>
+                <Text style={styles.btntxt}>Generate Invoice</Text>
+              </TouchableOpacity>
+            )
           ) : (
             <TouchableOpacity
               onPress={lockedPartItems}
