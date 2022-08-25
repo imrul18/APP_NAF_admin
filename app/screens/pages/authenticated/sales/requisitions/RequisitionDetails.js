@@ -97,7 +97,8 @@ const RequisitionDetails = ({navigation, route}) => {
                 )}
               </>
 
-              {user?.permissions.includes('requisitions_approve') && (
+              {(user?.role == 'Admin' ||
+                user?.permissions.includes('requisitions_approve')) && (
                 <>
                   {data.status != 'rejected' && data.status != 'approved' && (
                     <View style={{flexDirection: 'row'}}>
@@ -111,7 +112,10 @@ const RequisitionDetails = ({navigation, route}) => {
                       <TouchableOpacity
                         onPress={() => rejectRequisition(data?.id)}>
                         <Text
-                          style={{...styles.button, backgroundColor: 'tomato'}}>
+                          style={{
+                            ...styles.button,
+                            backgroundColor: 'tomato',
+                          }}>
                           Reject
                         </Text>
                       </TouchableOpacity>

@@ -124,26 +124,32 @@ const QuotationDetails = ({navigation, route}) => {
                 <Text style={styles.btntxt}>Invoice Generated</Text>
               </View>
             ) : (
-              <TouchableOpacity
-                onPress={generateInvoice}
-                style={{
-                  ...styles.btn,
-                  paddingHorizontal: 15,
-                }}>
-                <Text style={styles.btntxt}>Generate Invoice</Text>
-              </TouchableOpacity>
+              (user?.role == 'Admin' ||
+                user?.permissions.includes('quotations_generate_invoice')) && (
+                <TouchableOpacity
+                  onPress={generateInvoice}
+                  style={{
+                    ...styles.btn,
+                    paddingHorizontal: 15,
+                  }}>
+                  <Text style={styles.btntxt}>Generate Invoice</Text>
+                </TouchableOpacity>
+              )
             )
           ) : (
-            <TouchableOpacity
-              onPress={lockedPartItems}
-              style={{
-                ...styles.btn,
-                backgroundColor: 'red',
-                borderColor: 'red',
-                paddingHorizontal: 15,
-              }}>
-              <Text style={styles.btntxt}>Lock</Text>
-            </TouchableOpacity>
+            (user?.role == 'Admin' ||
+              user?.permissions.includes('quotations_lock')) && (
+              <TouchableOpacity
+                onPress={lockedPartItems}
+                style={{
+                  ...styles.btn,
+                  backgroundColor: 'red',
+                  borderColor: 'red',
+                  paddingHorizontal: 15,
+                }}>
+                <Text style={styles.btntxt}>Lock</Text>
+              </TouchableOpacity>
+            )
           )}
         </View>
       </View>
