@@ -13,6 +13,7 @@ import {useNetInfo} from '@react-native-community/netinfo';
 import RNExitApp from 'react-native-exit-app';
 
 import {loadUserFromLocal} from '../../../ReduxStore/AuthStore';
+import ProfileService from '../../../services/ProfileService';
 
 const WelcomePage = ({navigation}) => {
   const netInfo = useNetInfo();
@@ -23,7 +24,9 @@ const WelcomePage = ({navigation}) => {
     var carry = await AsyncStorage.getItem('user');
     carry = JSON.parse(carry);
     if (carry?.access_token) {
-      dispatch(loadUserFromLocal(carry.user));
+      const res = await ProfileService.getProfile();
+      console.log(res);
+      dispatch(loadUserFromLocal(res));
       navigation.navigate('authenticated');
     } else {
       navigation.navigate('login');

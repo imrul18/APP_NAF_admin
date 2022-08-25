@@ -85,7 +85,7 @@ const ShowProfile = ({navigation}) => {
           <Text>{user?.name}</Text>
           <Text>{user?.id}</Text>
           <Text>{user?.email}</Text>
-          <Text>{user?.designation?.name}</Text>
+          <Text>{user?.designation}</Text>
           <Text>{user?.role}</Text>
           <Text>{user?.status == 1 ? 'Active' : 'Inactive'}</Text>
         </View>

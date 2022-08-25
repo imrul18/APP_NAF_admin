@@ -2,8 +2,7 @@ import http from "./http-common";
 
 
 const getProfile = async()=>{
-  const res = await http.get("/profile");
-  
+  const res = await http.get("/profile");  
   return res.data;
 }
 
