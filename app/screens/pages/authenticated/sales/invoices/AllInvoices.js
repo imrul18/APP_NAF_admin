@@ -11,10 +11,13 @@ import {
   TouchableOpacity,
   RefreshControl,
 } from 'react-native';
+import {useSelector} from 'react-redux';
 import InvoiceService from '../../../../../services/InvoiceService';
 
 const AllInvoices = ({navigation}) => {
   const isFocused = useIsFocused();
+  const {user} = useSelector(state => state.authStore);
+
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
@@ -63,54 +66,68 @@ const AllInvoices = ({navigation}) => {
   };
 
   const invoiceList = ({item}) => {
+    const component = item => {
+      return (
+        <>
+          <View style={styles.cardtitle}>
+            <Text>Invoice ID</Text>
+            <Text>Company</Text>
+            <Text>Requisition Type</Text>
+            <Text>Part Quantity</Text>
+            <Text>Total</Text>
+            <Text>Delivery Notes</Text>
+          </View>
+          <View>
+            <Text>:</Text>
+            <Text>:</Text>
+            <Text>:</Text>
+            <Text>:</Text>
+            <Text>:</Text>
+            <Text>:</Text>
+          </View>
+          <View style={styles.carddetails}>
+            <Text>{item?.invoice_number}</Text>
+            <Text>{item?.company?.name}</Text>
+            <Text>
+              {item?.requisition?.type == 'claim_report'
+                ? 'Claim Report'
+                : 'Puchase Request'}
+            </Text>
+            <Text>
+              {item?.part_items?.reduce(
+                (partialSum, a) => partialSum + a.quantity,
+                0,
+              )}
+            </Text>
+            <Text>
+              {item?.requisition?.type != 'claim_report'
+                ? item?.part_items?.reduce(
+                    (partialSum, a) => partialSum + parseInt(a.total_value),
+                    0,
+                  )
+                : 0}{' '}
+              Tk.
+            </Text>
+            <Text>{item?.deliveryNote ? 'Yes' : 'No'}</Text>
+          </View>
+        </>
+      );
+    };
     return (
-      <TouchableOpacity
-        style={styles.card}
-        onPress={() => {
-          navigation.navigate('InvoiceDetails', {id: item.id});
-        }}>
-        <View style={styles.cardtitle}>
-          <Text>Invoice ID</Text>
-          <Text>Company</Text>
-          <Text>Requisition Type</Text>
-          <Text>Part Quantity</Text>
-          <Text>Total</Text>
-          <Text>Delivery Notes</Text>
-        </View>
-        <View>
-          <Text>:</Text>
-          <Text>:</Text>
-          <Text>:</Text>
-          <Text>:</Text>
-          <Text>:</Text>
-          <Text>:</Text>
-        </View>
-        <View style={styles.carddetails}>
-          <Text>{item?.invoice_number}</Text>
-          <Text>{item?.company?.name}</Text>
-          <Text>
-            {item?.requisition?.type == 'claim_report'
-              ? 'Claim Report'
-              : 'Puchase Request'}
-          </Text>
-          <Text>
-            {item?.part_items?.reduce(
-              (partialSum, a) => partialSum + a.quantity,
-              0,
-            )}
-          </Text>
-          <Text>
-            {item?.requisition?.type != 'claim_report'
-              ? item?.part_items?.reduce(
-                  (partialSum, a) => partialSum + parseInt(a.total_value),
-                  0,
-                )
-              : 0}{' '}
-            Tk.
-          </Text>
-          <Text>{item?.deliveryNote ? 'Yes' : 'No'}</Text>
-        </View>
-      </TouchableOpacity>
+      <>
+        {user?.role === 'Admin' ||
+        user?.permissions.includes('invoices_show') ? (
+          <TouchableOpacity
+            style={styles.card}
+            onPress={() => {
+              navigation.navigate('InvoiceDetails', {id: item.id});
+            }}>
+            {component(item)}
+          </TouchableOpacity>
+        ) : (
+          <View style={styles.card}>{component(item)}</View>
+        )}
+      </>
     );
   };
 

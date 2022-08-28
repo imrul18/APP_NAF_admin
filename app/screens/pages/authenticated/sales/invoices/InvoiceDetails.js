@@ -102,9 +102,9 @@ const InvoiceDetails = ({navigation, route}) => {
             <Text>{data?.deliveryNote ? 'Yes' : 'No'}</Text>
           </View>
         </View>
-        <TouchableOpacity>
+        {/* <TouchableOpacity>
           <Text style={styles.button}>Generate Delivery Note</Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </View>
 
       <Text style={{fontSize: 24, fontWeight: '700', textAlign: 'center'}}>
