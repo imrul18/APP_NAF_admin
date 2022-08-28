@@ -11,12 +11,13 @@ import {
   TouchableOpacity,
   RefreshControl,
 } from 'react-native';
-import { useSelector } from 'react-redux';
+import {useSelector} from 'react-redux';
 import QuotationService from '../../../../../services/QuotationService';
 
 const AllQuotations = ({navigation}) => {
   const isFocused = useIsFocused();
   const {user} = useSelector(state => state.authStore);
+
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
@@ -65,38 +66,50 @@ const AllQuotations = ({navigation}) => {
   };
 
   const Requisition = ({item}) => {
-    return (
-      <TouchableOpacity
-        style={styles.card}
-        onPress={() => {
-          (user?.role === 'Admin' ||
-            user?.permissions.includes('quotations_show')) &&
-          navigation.navigate('QuotationDetails', {id: item.id});
-        }}>
-        <View style={styles.cardtitle}>
-          <Text>Quotation ID</Text>
-          <Text>Requisition Type</Text>
-          <Text>Status</Text>
-          <Text>Invoice</Text>
-        </View>
-        <View>
-          <Text>:</Text>
-          <Text>:</Text>
-          <Text>:</Text>
-          <Text>:</Text>
-        </View>
-        <View style={styles.carddetails}>
-          <Text>{item?.pq_number}</Text>
-          <Text>
-            {item?.requisition?.type == 'claim_report'
-              ? 'Claim Report'
-              : 'Puchase Request'}
-          </Text>
+    const component = item => {
+      return (
+        <>
+          <View style={styles.cardtitle}>
+            <Text>Quotation ID</Text>
+            <Text>Requisition Type</Text>
+            <Text>Status</Text>
+            <Text>Invoice</Text>
+          </View>
+          <View>
+            <Text>:</Text>
+            <Text>:</Text>
+            <Text>:</Text>
+            <Text>:</Text>
+          </View>
+          <View style={styles.carddetails}>
+            <Text>{item?.pq_number}</Text>
+            <Text>
+              {item?.requisition?.type == 'claim_report'
+                ? 'Claim Report'
+                : 'Puchase Request'}
+            </Text>
 
-          <Text>{item?.locked_at ? 'Locked' : 'On Going'}</Text>
-          <Text>{item?.invoice ? 'Yes' : 'No'}</Text>
-        </View>
-      </TouchableOpacity>
+            <Text>{item?.locked_at ? 'Locked' : 'On Going'}</Text>
+            <Text>{item?.invoice ? 'Yes' : 'No'}</Text>
+          </View>
+        </>
+      );
+    };
+    return (
+      <>
+        {user?.role === 'Admin' ||
+        user?.permissions.includes('quotations_show') ? (
+          <TouchableOpacity
+            style={styles.card}
+            onPress={() => {
+              navigation.navigate('QuotationDetails', {id: item.id});
+            }}>
+            {component(item)}
+          </TouchableOpacity>
+        ) : (
+          <View style={styles.card}>{component(item)}</View>
+        )}
+      </>
     );
   };
 

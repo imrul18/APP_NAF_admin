@@ -68,34 +68,46 @@ const AllRequisition = ({navigation}) => {
   };
 
   const Requisition = ({item}) => {
-    return (
-      <TouchableOpacity
-        style={styles.card}
-        onPress={() => {
-          (user?.role === 'Admin' ||
-            user?.permissions.includes('requisitions_show')) &&
-            navigation.navigate('RequisitionDetails', {id: item.id});
-        }}>
-        <View style={styles.cardtitle}>
-          <Text>Requisition ID</Text>
-          <Text>Priority</Text>
-          <Text>Expected Delivery</Text>
-          <Text>Quotation</Text>
-        </View>
-        <View>
-          <Text>:</Text>
-          <Text>:</Text>
-          <Text>:</Text>
-          <Text>:</Text>
-        </View>
-        <View style={styles.carddetails}>
-          <Text>{item?.rq_number}</Text>
-          <Text>{item?.priority}</Text>
+    const component = item => {
+      return (
+        <>
+          <View style={styles.cardtitle}>
+            <Text>Requisition ID</Text>
+            <Text>Priority</Text>
+            <Text>Expected Delivery</Text>
+            <Text>Quotation</Text>
+          </View>
+          <View>
+            <Text>:</Text>
+            <Text>:</Text>
+            <Text>:</Text>
+            <Text>:</Text>
+          </View>
+          <View style={styles.carddetails}>
+            <Text>{item?.rq_number}</Text>
+            <Text>{item?.priority}</Text>
 
-          <Text>{item?.expected_delivery}</Text>
-          <Text>{item?.quotation ? 'Yes' : 'No'}</Text>
-        </View>
-      </TouchableOpacity>
+            <Text>{item?.expected_delivery}</Text>
+            <Text>{item?.quotation ? 'Yes' : 'No'}</Text>
+          </View>
+        </>
+      );
+    };
+    return (
+      <>
+        {user?.role === 'Admin' ||
+        user?.permissions.includes('requisitions_show') ? (
+          <TouchableOpacity
+            style={styles.card}
+            onPress={() => {
+              navigation.navigate('RequisitionDetails', {id: item.id});
+            }}>
+            {component(item)}
+          </TouchableOpacity>
+        ) : (
+          <View style={styles.card}>{component(item)}</View>
+        )}
+      </>
     );
   };
 

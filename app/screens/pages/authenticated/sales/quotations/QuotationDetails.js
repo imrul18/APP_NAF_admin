@@ -8,12 +8,15 @@ import {
   Modal,
   TouchableOpacity,
 } from 'react-native';
+import { useSelector } from 'react-redux';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import InvoiceService from '../../../../../services/InvoiceService';
 import QuotationService from '../../../../../services/QuotationService';
 
 const QuotationDetails = ({navigation, route}) => {
   const [data, setData] = useState();
+  const {user} = useSelector(state => state.authStore);
+
 
   const [loading, setLoading] = useState(true);
 
