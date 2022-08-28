@@ -11,10 +11,13 @@ import {
   TouchableOpacity,
   RefreshControl,
 } from 'react-native';
+import {useSelector} from 'react-redux';
 import DeliverNoteService from '../../../../../services/DeliverNoteService';
 
 const AllDeliveryNotes = ({navigation}) => {
   const isFocused = useIsFocused();
+  const {user} = useSelector(state => state.authStore);
+
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
@@ -63,28 +66,42 @@ const AllDeliveryNotes = ({navigation}) => {
   };
 
   const Requisition = ({item}) => {
+    const component = item => {
+      return (
+        <>
+          <View style={styles.cardtitle}>
+            <Text>Delivery Notes ID</Text>
+            <Text>Company</Text>
+            <Text>Invoice ID</Text>
+          </View>
+          <View>
+            <Text>:</Text>
+            <Text>:</Text>
+            <Text>:</Text>
+          </View>
+          <View style={styles.carddetails}>
+            <Text>{item?.dn_number}</Text>
+            <Text>{item?.invoice?.company?.name}</Text>
+            <Text>{item?.invoice?.invoice_number}</Text>
+          </View>
+        </>
+      );
+    };
     return (
-      <TouchableOpacity
-        style={styles.card}
-        onPress={() => {
-          navigation.navigate('DeliveryNotesDetails', {id: item.id});
-        }}>
-        <View style={styles.cardtitle}>
-          <Text>Delivery Notes ID</Text>
-          <Text>Company</Text>
-          <Text>Invoice ID</Text>
-        </View>
-        <View>
-          <Text>:</Text>
-          <Text>:</Text>
-          <Text>:</Text>
-        </View>
-        <View style={styles.carddetails}>
-          <Text>{item?.dn_number}</Text>
-          <Text>{item?.invoice?.company?.name}</Text>
-          <Text>{item?.invoice?.invoice_number}</Text>
-        </View>
-      </TouchableOpacity>
+      <>
+        {user?.role === 'Admin' ||
+        user?.permissions.includes('deliverynotes_show') ? (
+          <TouchableOpacity
+            style={styles.card}
+            onPress={() => {
+              navigation.navigate('DeliveryNotesDetails', {id: item.id});
+            }}>
+            {component(item)}
+          </TouchableOpacity>
+        ) : (
+          <View style={styles.card}>{component(item)}</View>
+        )}
+      </>
     );
   };
 
