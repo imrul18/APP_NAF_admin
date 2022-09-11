@@ -45,7 +45,7 @@ const InvoiceDetails = ({navigation, route}) => {
             <Text>:</Text>
           </View>
           <View style={styles.carddetails}>
-            <Text>{item?.item?.part?.aliases[0].name}</Text>
+            <Text>{item?.item?.part?.aliases[0].name.slice(0,30)+"..."}</Text>
             <Text>{item?.item?.part?.aliases[0].part_number}</Text>
             <Text>{item?.item?.quantity ?? ''}</Text>
             <Text>{item?.item?.unit_value ?? ''}</Text>

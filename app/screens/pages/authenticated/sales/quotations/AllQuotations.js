@@ -1,5 +1,5 @@
 import {useIsFocused} from '@react-navigation/native';
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import {
   View,
   Text,
@@ -18,13 +18,14 @@ const AllQuotations = ({navigation}) => {
   const isFocused = useIsFocused();
   const {user} = useSelector(state => state.authStore);
 
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [lastPage, setLastPage] = useState();
 
   const [data, setData] = useState([]);
   const [searchData, setSearchData] = useState();
+  const pageEntry = useRef(false)
 
   const getQuotations = async () => {
     setLoading(true);
@@ -37,7 +38,14 @@ const AllQuotations = ({navigation}) => {
   };
 
   useEffect(() => {
-    getQuotations();
+    if(pageEntry.current == false)
+    {
+      getQuotations();
+      pageEntry.current = true
+    }
+    else 
+      pageEntry.current = false
+
   }, [isFocused]);
 
   useEffect(() => {

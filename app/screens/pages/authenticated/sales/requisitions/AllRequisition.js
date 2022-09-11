@@ -1,5 +1,5 @@
 import {useIsFocused} from '@react-navigation/native';
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import {
   View,
   Text,
@@ -18,9 +18,10 @@ import RequisitionService from '../../../../../services/RequisitionService';
 
 const AllRequisition = ({navigation}) => {
   const isFocused = useIsFocused();
+  const pageEntry = useRef(false)
   const {user} = useSelector(state => state.authStore);
 
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [lastPage, setLastPage] = useState();
@@ -39,7 +40,15 @@ const AllRequisition = ({navigation}) => {
   };
 
   useEffect(() => {
-    getRequisition();
+
+    if(pageEntry.current == false)
+    {
+      getRequisition();
+      pageEntry.current = true
+    }
+    else 
+      pageEntry.current = false
+
   }, [isFocused]);
 
   useEffect(() => {

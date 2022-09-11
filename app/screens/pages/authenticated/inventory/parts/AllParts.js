@@ -80,33 +80,42 @@ const AllParts = ({navigation}) => {
   };
 
   const EmployeeList = ({item}) => {
+    const component = item => {
+      return (
+        <>
+          <View style={{flexDirection: 'row'}}>
+            <View style={styles.cardtitle}>
+              <Image style={styles.image} source={{uri: item?.image}} />
+            </View>
+            <View style={styles.cardtitle}>
+              <Text>Name</Text>
+              <Text>Heading</Text>
+              <Text>Part Number</Text>
+            </View>
+            <View>
+              <Text>:</Text>
+              <Text>:</Text>
+              <Text>:</Text>
+            </View>
+            <View style={{...styles.carddetails}}>
+              <Text>{item?.name.slice(0,16)+'...'}</Text>
+              <Text>{item?.heading.slice(0,16)+'...'}</Text>
+              <Text>{item?.part_number}</Text>
+            </View>
+          </View>
+        </>
+      );
+    };
     return (
-      <TouchableOpacity
-        style={styles.card}
-        onPress={() => {
-          navigation.navigate('PartsDetails', {data: item});
-        }}>
-        <View style={{flexDirection: 'row'}}>
-          <View style={styles.cardtitle}>
-            <Image style={styles.image} source={{uri: item?.image}} />
-          </View>
-          <View style={styles.cardtitle}>
-            <Text>Name</Text>
-            <Text>Heading</Text>
-            <Text>Part Number</Text>
-          </View>
-          <View>
-            <Text>:</Text>
-            <Text>:</Text>
-            <Text>:</Text>
-          </View>
-          <View style={{...styles.carddetails}}>
-            <Text>{item?.name}</Text>
-            <Text>{item?.heading}</Text>
-            <Text>{item?.part_number}</Text>
-          </View>
-        </View>
-      </TouchableOpacity>
+      <>
+        <TouchableOpacity
+          style={styles.card}
+          onPress={() => {
+            navigation.navigate('PartsDetails', {data: item});
+          }}>
+          {component(item)}
+        </TouchableOpacity>
+      </>
     );
   };
 

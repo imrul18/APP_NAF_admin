@@ -1,5 +1,5 @@
 import {useIsFocused} from '@react-navigation/native';
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import {
   View,
   Text,
@@ -18,7 +18,8 @@ const AllDeliveryNotes = ({navigation}) => {
   const isFocused = useIsFocused();
   const {user} = useSelector(state => state.authStore);
 
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const pageEntry = useRef(false)
   const [refreshing, setRefreshing] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [lastPage, setLastPage] = useState();
@@ -26,7 +27,7 @@ const AllDeliveryNotes = ({navigation}) => {
   const [data, setData] = useState([]);
   const [searchData, setSearchData] = useState();
 
-  const getQuotations = async () => {
+  const getDeliveryNotes = async () => {
     setLoading(true);
     const res = await DeliverNoteService.getAll({page: currentPage});
     setCurrentPage(res.meta.current_page + 1);
@@ -37,8 +38,17 @@ const AllDeliveryNotes = ({navigation}) => {
   };
 
   useEffect(() => {
-    getQuotations();
+    if(pageEntry.current == false)
+    {
+      getDeliveryNotes();
+      pageEntry.current = true
+    }
+    else 
+      pageEntry.current = false
+
   }, [isFocused]);
+  
+
 
   useEffect(() => {
     setSearchData(data);
@@ -129,7 +139,7 @@ const AllDeliveryNotes = ({navigation}) => {
             }
             onEndReached={() => {
               if (currentPage > lastPage) return;
-              else getQuotations();
+              else getDeliveryNotes();
             }}
           />
         ) : (
